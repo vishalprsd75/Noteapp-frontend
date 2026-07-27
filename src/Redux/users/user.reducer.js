@@ -1,8 +1,8 @@
 import { LOGIN_USER_ERROR, LOGIN_USER_LOADING, LOGIN_USER_SUCCESS, LOGOUT, REGISTER_USER_ERROR, REGISTER_USER_LOADING } from "./user.types"
 
 const initialState = {
-    token:null,
-    auth:false,
+    token: localStorage.getItem("token") || null,
+    auth: !!localStorage.getItem("token"),
     loading:false,
     error:false
 }
@@ -23,6 +23,7 @@ export default function userReducer(state=initialState,action){
         }
 
         case LOGIN_USER_SUCCESS:{
+            localStorage.setItem("token", payload);
             return {
                 ...state, loading:false, error:false, token:payload,auth:true
             }
@@ -34,7 +35,10 @@ export default function userReducer(state=initialState,action){
             }
         }
         case LOGOUT :{
-            return initialState
+            localStorage.removeItem("token");
+            return {
+                ...initialState, auth: false, token: null
+            }
         }
         
 
